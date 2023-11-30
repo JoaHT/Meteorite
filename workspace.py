@@ -43,16 +43,12 @@ data_sub = data[data['year']<=2023]
 data_sub.describe()
 
 "Next we simplify 'mass (g)' and make it into 'mass'."
-data_sub['mass'] = data_sub['mass (g)']/100
+data_sub['mass'] = data_sub['mass (g)']/1000
 
 "And drop the 'mass (g)'."
 data_sub = data_sub.drop(['mass (g)'], axis = 1)
-
-"Here we are fixing a weight mistake, and making it into kgs."
-data_sub['mass'] = data_sub['mass']/10
 
 data_sub.head()
 
 "Investigating the 'fall' column as it is intriguing, where we can see that its either fallen or found"
 data_sub['fall'].unique()
-
