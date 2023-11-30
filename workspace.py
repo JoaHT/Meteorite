@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np 
 
 "Store the CSV file as data, to further work on it"
-data = pd.read_csv("Meteorite_Landings.csv")
+data = pd.read_csv('Meteorite_Landings.csv')
 
 "Here we are seeing if we properly downloaded and stored the data."
 data.head()
@@ -37,7 +37,22 @@ data.describe()
 print(data[data['year']>2023])
 
 "As we can see its only one instance of the year being beyond 2023, we can easily get rid of it"
-data_subset = data[data['year']<=2023]
+data_sub = data[data['year']<=2023]
 
 "Now we see that the oldest meteorite is from 2013"
-data_subset.describe()
+data_sub.describe()
+
+"Next we simplify 'mass (g)' and make it into 'mass'."
+data_sub['mass'] = data_sub['mass (g)']/100
+
+"And drop the 'mass (g)'."
+data_sub = data_sub.drop(['mass (g)'], axis = 1)
+
+"Here we are fixing a weight mistake, and making it into kgs."
+data_sub['mass'] = data_sub['mass']/10
+
+data_sub.head()
+
+"Investigating the 'fall' column as it is intriguing, where we can see that its either fallen or found"
+data_sub['fall'].unique()
+
