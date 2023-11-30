@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np 
 
 "Store the CSV file as data, to further work on it"
-data = pd.read_csv('Meteorite_Landings.csv')
+data = pd.read_csv("Meteorite_Landings.csv")
 
 "Here we are seeing if we properly downloaded and stored the data."
 data.head()
