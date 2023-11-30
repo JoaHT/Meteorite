@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np 
 
 "Store the CSV file as data, to further work on it"
-data = pd.read_csv("Meteorite_Landings.csv")
+data = pd.read_csv('Meteorite_Landings.csv')
 
 "Here we are seeing if we properly downloaded and stored the data."
 data.head()
@@ -41,5 +41,3 @@ data_subset = data[data['year']<=2023]
 
 "Now we see that the oldest meteorite is from 2013"
 data_subset.describe()
-
-data.head()
