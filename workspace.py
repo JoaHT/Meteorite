@@ -41,3 +41,5 @@ data_subset = data[data['year']<=2023]
 
 "Now we see that the oldest meteorite is from 2013"
 data_subset.describe()
+
+data.head()
