@@ -52,3 +52,15 @@ data_sub.head()
 
 "Investigating the 'fall' column as it is intriguing, where we can see that its either fallen or found"
 data_sub['fall'].unique()
+
+"Figuring out the mean mass of both fall and found, where we can see that the ones that were perceived falling are heavier on average."
+data_sub.groupby('fall')['mass'].mean()
+
+"Here we see that there are two types, valig and relict, the latter being a meteorite inflicted by weather."
+data_sub['nametype'].unique()
+
+"By grouping the nametypes by the mean mass we can see that the ones that are Relict are incredibly small on average"
+data_sub.groupby('nametype')['mass'].mean()
+
+"Here we can see that the heaviest Classes tend to be Iron, and the bottom two are Relict"
+data_sub.groupby('recclass')['mass'].mean().sort_values(ascending=False)
