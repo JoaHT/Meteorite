@@ -2,6 +2,12 @@
 
 import pandas as pd 
 import numpy as np 
+import matplotlib.pyplot as plt
+import seaborn as sns
+import time
+from geopy.geocoders import Photon
+geolocator = Photon(user_agent="measurements")
+
 
 "Store the CSV file as data, to further work on it"
 data = pd.read_csv('Meteorite_Landings.csv')
@@ -64,3 +70,21 @@ data_sub.groupby('nametype')['mass'].mean()
 
 "Here we can see that the heaviest Classes tend to be Iron, and the bottom two are Relict"
 data_sub.groupby('recclass')['mass'].mean().sort_values(ascending=False)
+
+"Checking which years have the most meteorite rainfall"
+data_sub['year'].value_counts()
+
+
+
+#def city_state_country(row):
+    #coord = f"{row['reclat']}, {row['reclong']}"
+    #location = geolocator.reverse(coord, exactly_one=True)
+    #address = location.raw['properties']
+    #city = address.get('city', '')
+    #country = address.get('country', '')
+    #row['city'] = city
+    #row['country'] = country
+    #return row
+
+#data_new = data_sub.apply(city_state_country, axis=1)
+#print(data_new)
