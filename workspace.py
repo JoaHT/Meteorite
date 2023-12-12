@@ -8,7 +8,7 @@ import time
 from geopy.geocoders import Photon
 geolocator = Photon(user_agent="measurements")
 
-
+"Phase 1, Data cleaning"
 "Store the CSV file as data, to further work on it"
 data = pd.read_csv('Meteorite_Landings.csv')
 
@@ -54,6 +54,7 @@ data_sub['mass'] = data_sub['mass (g)']/1000
 "And drop the 'mass (g)'."
 data_sub = data_sub.drop(['mass (g)'], axis = 1)
 
+"Phase 2, analysing the changed data to see patterns."
 data_sub.head()
 
 "Investigating the 'fall' column as it is intriguing, where we can see that its either fallen or found"
@@ -74,6 +75,49 @@ data_sub.groupby('recclass')['mass'].mean().sort_values(ascending=False)
 "Checking which years have the most meteorite rainfall"
 data_sub['year'].value_counts()
 
+"Next we are gonna visualise the meteorite strikes on the world using geopandas"
+import geopandas as gpd
+
+countries = gpd.read_file(
+               gpd.datasets.get_path("naturalearth_lowres"))
+countries.head()
+
+countries.plot(color="lightgrey")
+
+"Separating our data into two groups, before and after 1900, as well as 1979 which has the highest amount of meteorstrikes."
+data_19 = data_sub[data_sub['year']<=1900]
+data_20 = data_sub[data_sub['year']>1900]
+data_79 = data_sub[data_sub['year']==1979]
+
+"Plot for meteorstrikes after 1900s"
+fig, ax = plt.subplots(figsize=(8,6))
+# plot map on axis
+countries = gpd.read_file(  
+     gpd.datasets.get_path("naturalearth_lowres"))
+countries.plot(color="lightgrey",ax=ax)
+# plot points
+data_20.plot(x="reclong", y="reclat", kind="scatter", 
+        c="year", colormap="cool", 
+        title=f"Meteorstrikes", 
+        ax=ax)
+# add grid
+ax.grid( alpha=0.5)
+plt.show()
+
+"Plot for 1979 and mass"
+fig, ax = plt.subplots(figsize=(8,6))
+# plot map on axis
+countries = gpd.read_file(  
+     gpd.datasets.get_path("naturalearth_lowres"))
+countries.plot(color="lightgrey",ax=ax)
+# plot points
+data_79.plot(x="reclong", y="reclat", kind="scatter", 
+        c="mass", colormap="cool", 
+        title=f"Meteorstrikes", 
+        ax=ax)
+# add grid
+ax.grid( alpha=0.5)
+plt.show()
 
 
 #def city_state_country(row):
@@ -88,3 +132,4 @@ data_sub['year'].value_counts()
 
 #data_new = data_sub.apply(city_state_country, axis=1)
 #print(data_new)
+
