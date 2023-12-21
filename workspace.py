@@ -1,81 +1,88 @@
-"This is the original file I am going to be working in" 
+#This is the original file I am going to be working in" 
+
+#The goal of this coding session is to clean and manipulate the 
+#dataset to portray the 20th and 21th centuries meteorstrikes
+
+#Checking if plotting mass by grams makes the graphs better?
+#Saving the cleaned csv
+#Create a tableau dashboard
 
 import pandas as pd 
 import numpy as np 
 import matplotlib.pyplot as plt
 import seaborn as sns
-import time
-from geopy.geocoders import Photon
-geolocator = Photon(user_agent="measurements")
 
-"Phase 1, Data cleaning"
-"Store the CSV file as data, to further work on it"
+#Phase 1, Data cleaning"
+#Store the CSV file as data, to further work on it"
 data = pd.read_csv('Meteorite_Landings.csv')
 
-"Here we are seeing if we properly downloaded and stored the data."
+#Here we are seeing if we properly downloaded and stored the data.
 data.head()
 
-"Checking the data shape"
+#Checking the data shape
 data.shape
 
-"Checking both if there is any null values or duplicated rows."
+#Checking both if there is any null values or duplicated rows.
 data.isna().sum()
 
 data.duplicated().sum()
 
-"Removing rows that have empty values as they will not prove to be useful for us"
+#Removing rows that have empty values as they will not prove to be useful for us
 data = data.dropna(axis=0)
 
-"We use info() to check the dtypes and if the amount of rows are the same."
+#We use info() to check the dtypes and if the amount of rows are the same.
 data.info()
 
-"Checking if the names of the columns are alright"
+#Checking if the names of the columns are alright
 data.columns
 
-"Double-checking dtypes to see if its okay."
+#Double-checking dtypes to see if its okay.
 data.dtypes
 
-"The describe function is imported to see how the numbers fluctuates"
+#The describe function is imported to see how the numbers fluctuates
 data.describe()
 
-"In the describe() function we noticed that the maximum year is 2101, which is a year that have yet to happen."
-"Therefore, we will see how many years there are after 2023."
+#In the describe() function we noticed that the maximum year is 2101, which is a year that have yet to happen.
+#Therefore, we will see how many years there are after 2023.
 print(data[data['year']>2023])
 
-"As we can see its only one instance of the year being beyond 2023, we can easily get rid of it"
+#As we can see its only one instance of the year being beyond 2023, we can easily get rid of it
 data_sub = data[data['year']<=2023]
 
-"Now we see that the oldest meteorite is from 2013"
+#Now we see that the oldest meteorite is from 2013
 data_sub.describe()
 
-"Next we simplify 'mass (g)' and make it into 'mass'."
+#Next we simplify 'mass (g)' and make it into 'mass'.
 data_sub['mass'] = data_sub['mass (g)']/1000
 
-"And drop the 'mass (g)'."
+#And drop the 'mass (g)'.
 data_sub = data_sub.drop(['mass (g)'], axis = 1)
 
-"Phase 2, analysing the changed data to see patterns."
-data_sub.head()
+#Lets narrow it down to the 20th and 21th century
+data_20 = data_sub[data_sub['year']>1900]
 
-"Investigating the 'fall' column as it is intriguing, where we can see that its either fallen or found"
-data_sub['fall'].unique()
+#Phase 2, analysing the changed data to see patterns.
+data_20.head()
 
-"Figuring out the mean mass of both fall and found, where we can see that the ones that were perceived falling are heavier on average."
-data_sub.groupby('fall')['mass'].mean()
+#Investigating the 'fall' column as it is intriguing, where we can see that its either fallen or found
+data_20['fall'].unique()
 
-"Here we see that there are two types, valig and relict, the latter being a meteorite inflicted by weather."
-data_sub['nametype'].unique()
+#Figuring out the mean mass of both fall and found, where we can see that the ones that were perceived falling are heavier on average.
+data_20.groupby('fall')['mass'].mean()
 
-"By grouping the nametypes by the mean mass we can see that the ones that are Relict are incredibly small on average"
-data_sub.groupby('nametype')['mass'].mean()
+#Here we see that there are two types, valig and relict, the latter being a meteorite inflicted by weather.
+data_20['nametype'].unique()
 
-"Here we can see that the heaviest Classes tend to be Iron, and the bottom two are Relict"
-data_sub.groupby('recclass')['mass'].mean().sort_values(ascending=False)
+#By grouping the nametypes by the mean mass we can see that the ones that are Relict are incredibly small on average
+data_20.groupby('nametype')['mass'].mean()
 
-"Checking which years have the most meteorite rainfall"
-data_sub['year'].value_counts()
+#Here we can see that the heaviest Classes tend to be Iron, and the bottom two are Relict
+data_20.groupby('recclass')['mass'].mean().sort_values(ascending=False)
 
-"Next we are gonna visualise the meteorite strikes on the world using geopandas"
+#Checking which years have the most meteorite rainfall
+data_20['year'].value_counts()
+
+#Next we are gonna visualise the meteorite strikes on the world using geopandas
 import geopandas as gpd
 
 countries = gpd.read_file(
@@ -84,12 +91,10 @@ countries.head()
 
 countries.plot(color="lightgrey")
 
-"Separating our data into two groups, before and after 1900, as well as 1979 which has the highest amount of meteorstrikes."
-data_19 = data_sub[data_sub['year']<=1900]
-data_20 = data_sub[data_sub['year']>1900]
+#Lets make a dataset version containing the year with the most meteorstrikes and plot it
 data_79 = data_sub[data_sub['year']==1979]
 
-"Plot for meteorstrikes after 1900s"
+#Plot for meteorstrikes after 1900s
 fig, ax = plt.subplots(figsize=(8,6))
 # plot map on axis
 countries = gpd.read_file(  
@@ -104,7 +109,7 @@ data_20.plot(x="reclong", y="reclat", kind="scatter",
 ax.grid( alpha=0.5)
 plt.show()
 
-"Plot for 1979 and mass"
+#Plot for 1979 and mass
 fig, ax = plt.subplots(figsize=(8,6))
 # plot map on axis
 countries = gpd.read_file(  
@@ -119,17 +124,18 @@ data_79.plot(x="reclong", y="reclat", kind="scatter",
 ax.grid( alpha=0.5)
 plt.show()
 
+#Plotting a histogram with all the counted meteorstrikes from the 20th and 21th century
+plt.hist(data_20['year'], bins=np.arange(data_20['year'].min(), data_sub['year'].max(), 1), color = 'green', ec='black' )
 
-#def city_state_country(row):
-    #coord = f"{row['reclat']}, {row['reclong']}"
-    #location = geolocator.reverse(coord, exactly_one=True)
-    #address = location.raw['properties']
-    #city = address.get('city', '')
-    #country = address.get('country', '')
-    #row['city'] = city
-    #row['country'] = country
-    #return row
+#Plotting the scatter graph we can see that theres a couple of really high outliers
+#After investigating, we found out that the 60 ton meteorite is the Hoba meteorite from 80000 years ago
+plt.scatter(data=data_20, x='year',y='mass')
 
-#data_new = data_sub.apply(city_state_country, axis=1)
-#print(data_new)
+#As this meteorite was found in 1920 but fell 80000 years ago, we decided to narrow the list 
+#down to only meteorites which fell in the 20th and 21th century.
+data_20 = data_20[data_20['fall']=='Fell']
 
+data_20 = data_20.drop(['fall'],axis =1)
+
+#A lot of the meteorites who fell in the 20/21th century were under 5 tons, except for one in 1947
+plt.scatter(data=data_20, x='year',y='mass')
