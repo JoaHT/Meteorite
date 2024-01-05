@@ -125,7 +125,7 @@ ax.grid( alpha=0.5)
 plt.show()
 
 #Plotting a histogram with all the counted meteorstrikes from the 20th and 21th century
-plt.hist(data_20['year'], bins=np.arange(data_20['year'].min(), data_sub['year'].max(), 1), color = 'green', ec='black' )
+plt.hist(data_20['year'], bins=np.arange(data_20['year'].min(), data_20['year'].max(), 1), color = 'green', ec='black' )
 
 #Plotting the scatter graph we can see that theres a couple of really high outliers
 #After investigating, we found out that the 60 ton meteorite is the Hoba meteorite from 80000 years ago
@@ -137,5 +137,7 @@ data_20 = data_20[data_20['fall']=='Fell']
 
 data_20 = data_20.drop(['fall'],axis =1)
 
-#A lot of the meteorites who fell in the 20/21th century were under 5 tons, except for one in 1947
+#Majority of the meteorites that fell down in the 20/21th century were under 1 ton, except for a few outliers
 plt.scatter(data=data_20, x='year',y='mass')
+
+#data_20.pivot(columns='recclass', values='year').plot.hist()
