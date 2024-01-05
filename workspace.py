@@ -140,4 +140,5 @@ data_20 = data_20.drop(['fall'],axis =1)
 #Majority of the meteorites that fell down in the 20/21th century were under 1 ton, except for a few outliers
 plt.scatter(data=data_20, x='year',y='mass')
 
-#data_20.pivot(columns='recclass', values='year').plot.hist()
+#Now that we are done with the dataset, lets save it and continue working on our dashboard in tableau.
+data_20.to_csv('data_20.csv', index=False)
